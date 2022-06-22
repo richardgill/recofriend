@@ -1,13 +1,7 @@
 import type { NextPage } from "next"
 import Head from "next/head"
 import { recommendationsWithTo, RecommendationWithTo } from "../db/queries"
-import {
-  User,
-  UserRecord,
-  XataClient,
-  RecommendationRecord,
-  RecommendationsRecord,
-} from "../db/xata"
+import { User, XataClient } from "../db/xata"
 
 const MY_ID = "rec_capcejgmnftpeb250su0"
 type Props = {
