@@ -1,5 +1,4 @@
 import type { NextPage } from "next"
-import Link from "next/link"
 import Head from "next/head"
 import {
   Flex,
@@ -9,10 +8,7 @@ import {
   Input,
   Button,
   FormControl,
-  VStack,
 } from "@chakra-ui/react"
-import { LinkIcon } from "@chakra-ui/icons"
-import { User, XataClient } from "../../db/xata"
 
 const MY_ID = "rec_capcejgmnftpeb250su0"
 type Props = {}
@@ -39,7 +35,6 @@ const Home: NextPage<Props> = (props) => {
           flexDirection={"column"}
           onSubmit={async (e) => {
             e.preventDefault()
-            console.log(e.target)
             const recommendation = {
               title: e.target.elements.title.value,
               description: e.target.elements.title.value,
