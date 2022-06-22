@@ -12,6 +12,7 @@ export interface Recommendation {
   created?: string | null
   description?: string | null
   owner?: UserRecord | null
+  title?: string | null
 }
 
 export type RecommendationRecord = Recommendation & XataRecord

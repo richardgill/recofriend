@@ -1,9 +1,12 @@
 import type { NextPage } from "next"
+import Link from "next/link"
 import Head from "next/head"
+import { Flex, Text, Button, Stack } from "@chakra-ui/react"
+import { LinkIcon } from "@chakra-ui/icons"
 import { recommendationsWithTo, RecommendationWithTo } from "../db/queries"
 import { User, XataClient } from "../db/xata"
+import { MY_USER_ID } from "../db/constants"
 
-const MY_ID = "rec_capcejgmnftpeb250su0"
 type Props = {
   user: User
   recommendations: RecommendationWithTo[]
@@ -14,10 +17,10 @@ export const getServerSideProps = async () => {
     apiKey: process.env.XATA_API_KEY,
   })
 
-  const user = await xata.db.user.filter("id", MY_ID).getFirst()
+  const user = await xata.db.user.filter("id", MY_USER_ID).getFirst()
 
   const recommendations = await recommendationsWithTo(
-    await xata.db.recommendation.filter("owner", MY_ID).getMany()
+    await xata.db.recommendation.filter("owner", MY_USER_ID).getMany()
   )
 
   return {
@@ -36,22 +39,45 @@ const Home: NextPage<Props> = (props) => {
         <meta name="description" content="Recofriend" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div>
-        <p>Logged in as</p>
-        <p>{props.user.name}</p>
-        <p>{props.user.email}</p>
-      </div>
-      {props.recommendations.map((r) => {
-        return (
-          <div>
-            {r.description}
-            {r.url}
-            {r.created}
-            by: {r.owner?.name}
-            to: {r.to.map((t) => t.name)}
-          </div>
-        )
-      })}
+      <Flex flexDirection={"column"} p={8}>
+        <Flex flexDirection={"column"} pb={4}>
+          <Text fontSize="xl">Logged in as</Text>
+          <p>{props.user.name}</p>
+          <p>{props.user.email}</p>
+        </Flex>
+        <Flex direction="column">
+          <Text fontSize="xl">Recommendations</Text>
+          <Stack marginY={4} spacing={4} direction="row" align="center">
+            <Link href="/recommendations/new">
+              <Button colorScheme="blue" size="sm">
+                New Recommendation
+              </Button>
+            </Link>
+          </Stack>
+          {props.recommendations.map((r) => {
+            if (r.url) {
+              return (
+                <Flex
+                  mt={4}
+                  p={5}
+                  direction="column"
+                  border="1px"
+                  borderColor="gray.200"
+                >
+                  <Text>
+                    <a href={r.url}>
+                      {r.title} <LinkIcon />
+                    </a>{" "}
+                  </Text>
+                  <Text>{r.description}</Text>
+                  <Text>Created at: {r.created}</Text>
+                  <Text>Shared with: {r.to.map((t) => t.name).join(", ")}</Text>
+                </Flex>
+              )
+            }
+          })}
+        </Flex>
+      </Flex>
     </div>
   )
 }
