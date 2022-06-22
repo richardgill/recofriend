@@ -1,6 +1,6 @@
 {
   "databaseURL": "https://recofriend-qmaou4.xata.sh/db/recofriend",
   "codegen": {
-    "output": "xata.ts"
+    "output": "./db/xata.ts"
   }
 }
