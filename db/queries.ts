@@ -7,20 +7,15 @@ import {
 import { xata } from "./client"
 
 export type RecommendationWithTo = RecommendationRecord & { to: UserRecord[] }
-
 export const recommendationsWithTo = async (
   recommendations: RecommendationRecord[]
 ): Promise<RecommendationWithTo[]> => {
   const ids = recommendations.map((r) => r.id)
-  const recommended: RecommendationsRecord[] = await xata.db.recommendations
-    .filter({ recommendation: { $any: ids } })
-    .getAll()
+  const recommended: RecommendationsRecord[] = await xata.db.recommendations.read(ids)
 
-  const userIds = recommended.map((rd) => rd.user?.id)
+  const userIds = recommended.map((rd) => rd.user?.id).filter((id):id is string => Boolean(id))
 
-  const users: UserRecord[] = await xata.db.user
-    .filter({ id: { $any: userIds } })
-    .getAll()
+  const users: UserRecord[] = await xata.db.user.read(userIds)
 
   const result = recommendations.map((recommendation) => {
     const to = recommended

@@ -1,55 +1,71 @@
-import { buildClient, BaseClientOptions, XataRecord } from "@xata.io/client"
+import {
+  BaseClientOptions,
+  buildClient,
+  SchemaInference,
+  XataRecord,
+} from "@xata.io/client";
 
-export interface User {
-  email?: string | null
-  name?: string | null
-}
-
-export type UserRecord = User & XataRecord
-
-export interface Recommendation {
-  url?: string | null
-  created?: string | null
-  description?: string | null
-  owner?: UserRecord | null
-  title?: string | null
-}
-
-export type RecommendationRecord = Recommendation & XataRecord
-
-export interface Recommendations {
-  recommendation?: RecommendationRecord | null
-  user?: UserRecord | null
-}
-
-export type RecommendationsRecord = Recommendations & XataRecord
-
-export interface Friend {
-  owner?: UserRecord | null
-  friend?: UserRecord | null
-}
-
-export type FriendRecord = Friend & XataRecord
-
-export type DatabaseSchema = {
-  user: User
-  recommendation: Recommendation
-  recommendations: Recommendations
-  friends: Friend
-}
-
-const tables = ["user", "recommendation", "recommendations", "friends"]
-
-const DatabaseClient = buildClient()
-
-export class XataClient extends DatabaseClient<DatabaseSchema> {
-  constructor(options?: BaseClientOptions) {
-    super(
+const tables = [
+  {
+    name: "user",
+    columns: [
+      { name: "email", type: "email" },
+      { name: "name", type: "string" },
+    ],
+  },
+  {
+    name: "recommendation",
+    columns: [
+      { name: "owner", type: "link", link: { table: "user" } },
+      { name: "title", type: "string" },
+      { name: "created", type: "datetime" },
+      { name: "url", type: "string" },
+      { name: "description", type: "text" },
+    ],
+  },
+  {
+    name: "recommendations",
+    columns: [
       {
-        databaseURL: "https://recofriend-qmaou4.xata.sh/db/recofriend",
-        ...options,
+        name: "recommendation",
+        type: "link",
+        link: { table: "recommendation" },
       },
-      tables
-    )
+      { name: "user", type: "link", link: { table: "user" } },
+    ],
+  },
+  {
+    name: "friends",
+    columns: [
+      { name: "owner", type: "link", link: { table: "user" } },
+      { name: "friend", type: "link", link: { table: "user" } },
+    ],
+  },
+] as const;
+
+export type SchemaTables = typeof tables;
+export type DatabaseSchema = SchemaInference<SchemaTables>;
+
+export type User = DatabaseSchema["user"];
+export type UserRecord = User & XataRecord;
+
+export type Recommendation = DatabaseSchema["recommendation"];
+export type RecommendationRecord = Recommendation & XataRecord;
+
+export type Recommendations = DatabaseSchema["recommendations"];
+export type RecommendationsRecord = Recommendations & XataRecord;
+
+export type Friend = DatabaseSchema["friends"];
+export type FriendRecord = Friend & XataRecord;
+
+const DatabaseClient = buildClient();
+
+const defaultOptions = {
+  databaseURL: "https://recofriend2-p2rd1c.xata.sh/db/recofriend",
+};
+
+export class XataClient extends DatabaseClient<SchemaTables> {
+  constructor(options?: BaseClientOptions) {
+    super({ ...defaultOptions, ...options }, tables);
   }
 }

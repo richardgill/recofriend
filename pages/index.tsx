@@ -18,15 +18,15 @@ export const getServerSideProps = async () => {
   })
 
   const user = await xata.db.user.filter("id", MY_USER_ID).getFirst()
-
+  console.log(user)
   const recommendations = await recommendationsWithTo(
-    await xata.db.recommendation.filter("owner", MY_USER_ID).getMany()
+    await xata.db.recommendation.filter("owner.id", MY_USER_ID).getMany()
   )
 
   return {
     props: {
       user: user,
-      recommendations: recommendations,
+      recommendations: recommendations.map(r => ({...r, created: r.created?.toISOString()})),
     },
   }
 }

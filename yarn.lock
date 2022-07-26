@@ -972,10 +972,10 @@
     "@typescript-eslint/types" "5.29.0"
     eslint-visitor-keys "^3.3.0"
 
-"@xata.io/client@^0.10.2":
-  version "0.10.2"
-  resolved "https://registry.yarnpkg.com/@xata.io/client/-/client-0.10.2.tgz#34c51a10858bb509ca5670a253f8abcbff2617b6"
-  integrity sha512-wF+zkasBSHqeQTnsgtnBam7vQSNSX0E3zXj6C7qBnsXnkE7lmKbxVkhJ86ftghTmxFxUGjV8cQm3yvaVgaZzLg==
+"@xata.io/client@^0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@xata.io/client/-/client-0.14.0.tgz#91ace64c8cf14493ed39350c7ec4eb2448bc9a2e"
+  integrity sha512-SKte+A4CL9rwONHY3x/hgSvdymdBKN4CvyfT4umOaKNQ1XRGrgm775PIXCj2DRizRxoIeHoTsK4rUbeBCNG81g==
 
 "@zag-js/focus-visible@0.1.0":
   version "0.1.0"
